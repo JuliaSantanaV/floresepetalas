@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Flores & Pétalas — Sobre Nós</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--cream:#faf7f2;--blush:#f0d4c4;--rose:#b85c50;--deep:#2c1f1f;--sage:#7a9470;--gold:#c4963c;--light:#f5efe8;--white:#fff;--grey:#8a7070}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--deep);overflow-x:hidden;cursor:none}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--light)}::-webkit-scrollbar-thumb{background:var(--blush);border-radius:3px}
+.cur{width:10px;height:10px;background:var(--rose);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .12s}
+.cur-ring{width:32px;height:32px;border:1.5px solid var(--rose);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .18s;opacity:.5}
+.topbar{background:var(--deep);color:rgba(250,247,242,.55);font-size:.68rem;text-transform:uppercase;letter-spacing:.16em;padding:.5rem 0;text-align:center}
+.topbar b{color:var(--gold)}
+nav{position:sticky;top:0;z-index:100;background:rgba(250,247,242,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--blush)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;padding:.85rem 4rem;gap:1.5rem}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:var(--deep);text-decoration:none;letter-spacing:.04em;white-space:nowrap}
+.nav-logo em{color:var(--rose);font-style:normal}
+.nav-links{display:flex;gap:1.8rem;list-style:none}
+.nav-links a{font-size:.74rem;text-transform:uppercase;letter-spacing:.12em;color:var(--deep);text-decoration:none;font-weight:500;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--rose)}
+.nav-actions{display:flex;gap:.3rem}
+.nav-btn{width:38px;height:38px;border:none;background:none;cursor:none;display:flex;align-items:center;justify-content:center;font-size:1.1rem;position:relative;transition:background .2s;border-radius:2px}
+.nav-btn:hover{background:var(--light)}
+.cart-badge{position:absolute;top:3px;right:3px;width:16px;height:16px;background:var(--rose);color:#fff;border-radius:50%;font-size:.55rem;font-weight:700;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.4);transition:all .2s}
+.cart-badge.show{opacity:1;transform:scale(1)}
+.cart-overlay{position:fixed;inset:0;background:rgba(44,31,31,.45);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s}
+.cart-overlay.open{opacity:1;pointer-events:all}
+.cart-panel{position:fixed;top:0;right:0;bottom:0;width:min(420px,100vw);background:#fff;z-index:201;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-16px 0 50px rgba(44,31,31,.12)}
+.cart-panel.open{transform:translateX(0)}
+.cart-head{padding:1.5rem 1.8rem;border-bottom:1px solid var(--blush);display:flex;align-items:center;justify-content:space-between}
+.cart-head h3{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400}
+.cart-close{background:none;border:none;cursor:none;font-size:1.3rem;color:var(--grey)}
+.cart-body{flex:1;overflow-y:auto;padding:1.2rem 1.8rem;display:flex;flex-direction:column;gap:.9rem}
+.cart-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;color:var(--grey);text-align:center}
+.cart-empty span{font-size:2.8rem}
+.cart-empty p{font-size:.85rem}
+.cart-empty a{font-size:.72rem;color:var(--rose);text-decoration:none;text-transform:uppercase;letter-spacing:.12em;border:1px solid var(--rose);padding:.5rem 1.2rem;cursor:none}
+.ci{display:flex;gap:.9rem;align-items:flex-start;padding-bottom:.9rem;border-bottom:1px solid var(--light)}
+.ci-thumb{width:64px;height:64px;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.8rem}
+.ci-info{flex:1;min-width:0}
+.ci-name{font-size:.83rem;font-weight:500;margin-bottom:.15rem}
+.ci-price{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--rose)}
+.ci-qty{display:flex;align-items:center;gap:.45rem;margin-top:.35rem}
+.qbtn{width:22px;height:22px;border:1px solid var(--blush);background:none;cursor:none;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .2s;line-height:1}
+.qbtn:hover{background:var(--rose);color:#fff;border-color:var(--rose)}
+.qnum{font-size:.82rem;min-width:18px;text-align:center;font-weight:500}
+.ci-rm{background:none;border:none;cursor:none;color:#ddd;font-size:.95rem;transition:color .2s;margin-left:auto}
+.ci-rm:hover{color:var(--rose)}
+.cart-foot{padding:1.5rem 1.8rem;border-top:1px solid var(--blush)}
+.frete-bar{width:100%;height:4px;background:var(--light);border-radius:2px;overflow:hidden;margin-bottom:.4rem}
+.frete-fill{height:100%;background:var(--sage);border-radius:2px;transition:width .4s}
+.frete-hint{font-size:.7rem;color:var(--grey);margin-bottom:.9rem}
+.cart-row{display:flex;justify-content:space-between;font-size:.82rem;color:var(--grey);margin-bottom:.45rem}
+.cart-total-row{display:flex;justify-content:space-between;align-items:center;margin:1rem 0 1.3rem}
+.cart-total-row span{font-size:.7rem;text-transform:uppercase;letter-spacing:.14em;color:var(--grey)}
+.cart-total-row strong{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--deep)}
+.btn-checkout{width:100%;padding:.95rem;background:var(--rose);color:#fff;border:none;font-family:'DM Sans',sans-serif;font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;cursor:none;transition:background .3s}
+.btn-checkout:hover{background:var(--deep)}
+.btn-keep{width:100%;padding:.62rem;background:none;border:1px solid var(--blush);font-family:'DM Sans',sans-serif;font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;cursor:none;margin-top:.5rem;color:var(--deep)}
+.sec-label{font-size:.62rem;text-transform:uppercase;letter-spacing:.22em;color:var(--sage);margin-bottom:.3rem}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.7rem,3vw,2.7rem);font-weight:300;color:var(--deep);line-height:1.15}
+.sec-title em{font-style:italic;color:var(--rose)}
+.btn-rose{display:inline-flex;align-items:center;gap:.5rem;background:var(--rose);color:#fff;padding:.9rem 2rem;font-size:.75rem;text-transform:uppercase;letter-spacing:.14em;text-decoration:none;border:2px solid var(--rose);transition:all .3s;cursor:none;font-family:'DM Sans',sans-serif}
+.btn-rose:hover{background:var(--deep);border-color:var(--deep)}
+.btn-outline{display:inline-flex;align-items:center;gap:.5rem;background:none;color:var(--deep);padding:.9rem 2rem;font-size:.75rem;text-transform:uppercase;letter-spacing:.14em;text-decoration:none;border:2px solid var(--deep);transition:all .3s;cursor:none;font-family:'DM Sans',sans-serif}
+.btn-outline:hover{background:var(--deep);color:var(--cream)}
+.page-header{background:linear-gradient(135deg,var(--deep) 0%,#5a3a3a 100%);padding:10rem 5rem 5rem;text-align:center;position:relative;overflow:hidden}
+.page-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(192,103,90,.25) 0%,transparent 65%)}
+.ph-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.22em;color:var(--sage);margin-bottom:.8rem;position:relative}
+.ph-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,5vw,5rem);font-weight:300;color:#fff;line-height:1.1;position:relative}
+.ph-title em{font-style:italic;color:var(--blush)}
+section{padding:5rem 4rem}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:var(--blush)}
+/* SOBRE */
+.img-box{width:100%;aspect-ratio:4/5;background:linear-gradient(135deg,#e8d5c4,#c4a898);display:flex;align-items:center;justify-content:center;font-size:9rem;border-radius:2px;position:relative}
+.img-box::before{content:'';position:absolute;inset:-2px;border:1px solid var(--blush);transform:translate(14px,14px);z-index:-1}
+.img-stat{position:absolute;bottom:-1.5rem;right:-1.5rem;background:var(--rose);color:#fff;padding:1.2rem 1.8rem;text-align:center}
+.img-stat strong{display:block;font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300}
+.img-stat span{font-size:.62rem;text-transform:uppercase;letter-spacing:.15em}
+.sobre-text p{font-size:.93rem;line-height:1.9;color:var(--grey);font-weight:300;margin-bottom:1rem}
+.pillars{display:flex;gap:1.4rem;margin-top:1.8rem;flex-wrap:wrap}
+.pillar{flex:1;min-width:90px;padding:1rem;border-left:2px solid var(--blush)}
+.pillar strong{display:block;font-family:'Cormorant Garamond',serif;font-size:1.05rem;margin-bottom:.3rem}
+.pillar span{font-size:.76rem;color:#aaa;line-height:1.6}
+/* NÚMEROS */
+.num-card{background:var(--cream);padding:3rem 2rem;text-align:center;transition:background .3s}
+.num-card:hover{background:var(--light)}
+.num-val{font-family:'Cormorant Garamond',serif;font-size:4rem;font-weight:300;color:var(--rose);line-height:1;margin-bottom:.5rem}
+.num-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.18em;color:#aaa}
+/* VALORES */
+.valores-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:3rem}
+.valor-card{padding:2.5rem 2rem;border:1px solid rgba(255,255,255,.07);position:relative;overflow:hidden;transition:border-color .3s}
+.valor-card:hover{border-color:rgba(192,103,90,.4)}
+.valor-num{font-family:'Cormorant Garamond',serif;font-size:4rem;font-weight:300;color:rgba(192,103,90,.2);position:absolute;top:1rem;right:1.5rem;line-height:1}
+.valor-icon{font-size:2rem;margin-bottom:1rem;display:block}
+.valor-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--cream);margin-bottom:.8rem}
+.valor-desc{font-size:.82rem;color:rgba(250,247,242,.45);line-height:1.8;font-weight:300}
+/* EQUIPE */
+.membro-card{background:#fff;overflow:hidden;transition:transform .4s,box-shadow .4s}
+.membro-card:hover{transform:translateY(-6px);box-shadow:0 20px 55px rgba(44,31,31,.1)}
+.membro-foto{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:5rem}
+.membro-info{padding:1.4rem 1.6rem 2rem}
+.membro-nome{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--deep);margin-bottom:.2rem}
+.membro-cargo{font-size:.68rem;text-transform:uppercase;letter-spacing:.15em;color:var(--rose);margin-bottom:.8rem}
+.membro-bio{font-size:.82rem;color:#aaa;line-height:1.7;font-weight:300}
+/* TIMELINE */
+.tl-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}
+.tl-list{margin-top:0;position:relative;padding-left:2rem}
+.tl-list::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--blush)}
+.tl-item{position:relative;padding:0 0 2.5rem 3rem}
+.tl-item::before{content:'';position:absolute;left:-5px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--rose);border:2px solid var(--light)}
+.tl-year{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--rose);font-weight:300;line-height:1;margin-bottom:.3rem}
+.tl-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--deep);margin-bottom:.3rem}
+.tl-desc{font-size:.85rem;color:#aaa;line-height:1.7;font-weight:300;max-width:500px}
+/* FOOTER */
+footer{background:var(--deep);color:rgba(250,247,242,.4);padding:4rem 4rem 2rem}
+.ftop{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3.5rem;margin-bottom:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.06)}
+.flogo{font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:600;color:rgba(250,247,242,.9);text-decoration:none;letter-spacing:.04em;display:inline-block;margin-bottom:.9rem}
+.flogo em{color:var(--rose);font-style:normal}
+.fbrand p{font-size:.78rem;line-height:1.9;max-width:230px;font-weight:300}
+.fsocial{display:flex;gap:.55rem;margin-top:1.4rem}
+.fsocial a{width:32px;height:32px;border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:rgba(250,247,242,.35);text-decoration:none;font-size:.8rem;transition:all .2s}
+.fsocial a:hover{background:var(--rose);border-color:var(--rose);color:#fff}
+.fcol h4{font-family:'Cormorant Garamond',serif;font-size:.92rem;color:rgba(250,247,242,.88);margin-bottom:1.1rem;font-weight:400}
+.fcol ul{list-style:none;display:flex;flex-direction:column;gap:.48rem}
+.fcol a{color:rgba(250,247,242,.34);text-decoration:none;font-size:.78rem;font-weight:300;transition:color .2s}
+.fcol a:hover{color:var(--blush)}
+.fbot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.fbot p{font-size:.7rem}
+.fpay{display:flex;gap:.4rem}
+.fpay span{background:rgba(255,255,255,.07);padding:.26rem .6rem;font-size:.6rem;color:rgba(250,247,242,.35);letter-spacing:.06em}
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(14px);background:var(--deep);color:#fff;padding:.82rem 1.7rem;font-size:.8rem;border-left:3px solid var(--rose);z-index:500;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;max-width:92vw}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s,transform .7s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(max-width:900px){
+  .nav-inner{padding:.8rem 1.5rem}.nav-links{display:none}
+  section{padding:3.5rem 1.5rem}
+  .grid-2,.tl-grid{grid-template-columns:1fr;gap:3rem}
+  .valores-grid,.grid-3{grid-template-columns:1fr}
+  .grid-4{grid-template-columns:1fr 1fr}
+  footer{padding:3rem 1.5rem 2rem}.ftop{grid-template-columns:1fr 1fr;gap:2rem}
+}
+</style>
+</head>
+<body>
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="curRing"></div>
+<div class="topbar">🚚 Frete grátis acima de <b>R$ 150</b> &nbsp;·&nbsp; Entrega no mesmo dia até 16h &nbsp;·&nbsp; Cupom <b>FLORES10</b></div>
+<nav>
+  <div class="nav-inner">
+    <a href="./index.html" class="nav-logo">Flores<em>&</em>Pétalas</a>
+    <ul class="nav-links">
+      <li><a href="./index.html">Início</a></li>
+      <li><a href="./produtos.html">Catálogo</a></li>
+      <li><a href="./servicos.html">Serviços</a></li>
+      <li><a href="./sobre.html" class="active">Sobre</a></li>
+      <li><a href="./contato.html">Contato</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-btn" onclick="showToast('💝 Lista de desejos em breve!')">♡</button>
+      <button class="nav-btn" onclick="showToast('👤 Área do cliente em breve!')">👤</button>
+      <button class="nav-btn" onclick="toggleCart()">🛒<span class="cart-badge" id="badge">0</span></button>
+    </div>
+  </div>
+</nav>
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-head"><h3>Meu Carrinho 🌸</h3><button class="cart-close" onclick="toggleCart()">✕</button></div>
+  <div class="cart-body" id="cartBody"><div class="cart-empty" id="cartEmpty"><span>🛒</span><p>Carrinho vazio</p><a href="./produtos.html" onclick="toggleCart()">Ver catálogo →</a></div></div>
+  <div class="cart-foot" id="cartFoot" style="display:none">
+    <div class="frete-bar"><div class="frete-fill" id="freteFill" style="width:0"></div></div>
+    <p class="frete-hint" id="freteHint">Falta <b>R$ 150,00</b> para frete grátis</p>
+    <div class="cart-row"><span>Subtotal</span><span id="cartSub">R$ 0,00</span></div>
+    <div class="cart-row"><span>Frete</span><span id="cartFrete">A calcular</span></div>
+    <div class="cart-total-row"><span>Total</span><strong id="cartTotal">R$ 0,00</strong></div>
+    <button class="btn-checkout" onclick="checkout()">Finalizar compra →</button>
+    <button class="btn-keep" onclick="toggleCart()">Continuar comprando</button>
+  </div>
+</div>
+
+<div class="page-header">
+  <div class="ph-label">Quem somos</div>
+  <h1 class="ph-title">Nossa <em>história</em> e valores</h1>
+</div>
+
+<section style="background:var(--cream)">
+  <div class="grid-2">
+    <div class="reveal" style="position:relative">
+      <div class="img-box">🌺<div class="img-stat"><strong>12+</strong><span>Anos de amor</span></div></div>
+    </div>
+    <div class="sobre-text reveal">
+      <div class="sec-label">Nossa história</div>
+      <h2 class="sec-title" style="margin-bottom:1.4rem">Arte que nasce<br>da <em>natureza</em></h2>
+      <p>A <strong>Flores & Pétalas</strong> nasceu em 2012 com um sonho simples: levar beleza, cor e emoção para a vida das pessoas. Tudo começou em uma pequena loja no centro da cidade, com muito amor e um propósito claro.</p>
+      <p>Ao longo dos anos, crescemos junto com nossos clientes. Estivemos presentes em casamentos, formaturas, aniversários e até nos momentos mais difíceis — porque as flores falam quando as palavras faltam.</p>
+      <p>Hoje somos referência em arte floral, com flores selecionadas diretamente dos melhores produtores do Brasil e do exterior.</p>
+      <div class="pillars">
+        <div class="pillar"><strong>Frescor</strong><span>Colhidas e entregues no dia</span></div>
+        <div class="pillar"><strong>Arte</strong><span>Composições autorais</span></div>
+        <div class="pillar"><strong>Amor</strong><span>Cada pedido com carinho</span></div>
+      </div>
+      <div style="margin-top:2rem"><a href="./contato.html" class="btn-rose">Fale conosco →</a></div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--light);padding:5rem 4rem">
+  <div class="reveal" style="text-align:center;margin-bottom:3rem">
+    <div class="sec-label">Em números</div>
+    <h2 class="sec-title">Nossa trajetória em <em>destaque</em></h2>
+  </div>
+  <div class="grid-4">
+    <div class="num-card reveal"><div class="num-val">12+</div><div class="num-label">Anos no mercado</div></div>
+    <div class="num-card reveal"><div class="num-val">8k+</div><div class="num-label">Clientes atendidos</div></div>
+    <div class="num-card reveal"><div class="num-val">500+</div><div class="num-label">Casamentos decorados</div></div>
+    <div class="num-card reveal"><div class="num-val">30+</div><div class="num-label">Variedades de flores</div></div>
+  </div>
+</section>
+
+<section style="background:var(--deep)">
+  <div class="reveal"><div class="sec-label" style="color:rgba(255,255,255,.4)">O que nos guia</div><h2 class="sec-title" style="color:#fff">Nossos <em>valores</em></h2></div>
+  <div class="valores-grid">
+    <div class="valor-card reveal"><span class="valor-num">01</span><span class="valor-icon">🌿</span><h3 class="valor-title">Frescor & Qualidade</h3><p class="valor-desc">Trabalhamos apenas com flores frescas, colhidas e entregues no mesmo dia.</p></div>
+    <div class="valor-card reveal"><span class="valor-num">02</span><span class="valor-icon">🎨</span><h3 class="valor-title">Criatividade</h3><p class="valor-desc">Cada arranjo é uma obra de arte única. Não seguimos fórmulas — criamos composições que contam histórias.</p></div>
+    <div class="valor-card reveal"><span class="valor-num">03</span><span class="valor-icon">💚</span><h3 class="valor-title">Sustentabilidade</h3><p class="valor-desc">Priorizamos produtores locais, embalagens recicláveis e práticas que respeitam o meio ambiente.</p></div>
+    <div class="valor-card reveal"><span class="valor-num">04</span><span class="valor-icon">🤝</span><h3 class="valor-title">Compromisso</h3><p class="valor-desc">Entrega no prazo, pedido exato, atendimento humanizado. Nossa palavra vale.</p></div>
+    <div class="valor-card reveal"><span class="valor-num">05</span><span class="valor-icon">❤️</span><h3 class="valor-title">Amor pelo que faz</h3><p class="valor-desc">Não é apenas trabalho — é vocação. Cada pétala colocada com intenção.</p></div>
+    <div class="valor-card reveal"><span class="valor-num">06</span><span class="valor-icon">✨</span><h3 class="valor-title">Experiência</h3><p class="valor-desc">Desde o primeiro contato até a entrega, queremos que você se sinta especial.</p></div>
+  </div>
+</section>
+
+<section style="background:var(--light)">
+  <div class="reveal" style="text-align:center;margin-bottom:3rem"><div class="sec-label">Quem faz acontecer</div><h2 class="sec-title">Nossa <em>equipe</em></h2></div>
+  <div class="grid-3">
+    <div class="membro-card reveal"><div class="membro-foto" style="background:linear-gradient(135deg,#fde8e0,#f5c5b0)">👩‍🌾</div><div class="membro-info"><div class="membro-nome">Ana Beatriz Lima</div><div class="membro-cargo">Fundadora & Florista-Chefe</div><p class="membro-bio">Com 15 anos de experiência em arte floral, fundou a loja em 2012 e é responsável por todas as criações exclusivas.</p></div></div>
+    <div class="membro-card reveal"><div class="membro-foto" style="background:linear-gradient(135deg,#e8f0e0,#c8ddb8)">👨‍🎨</div><div class="membro-info"><div class="membro-nome">Carlos Eduardo</div><div class="membro-cargo">Designer Floral</div><p class="membro-bio">Especialista em decoração de eventos, Carlos transforma espaços com composições florais de tirar o fôlego.</p></div></div>
+    <div class="membro-card reveal"><div class="membro-foto" style="background:linear-gradient(135deg,#f0e0f5,#d8b8e0)">👩‍💼</div><div class="membro-info"><div class="membro-nome">Marina Costa</div><div class="membro-cargo">Atendimento & Entregas</div><p class="membro-bio">A voz e o sorriso da loja. Marina garante que cada pedido chegue com perfeição e no tempo certo.</p></div></div>
+  </div>
+</section>
+
+<section style="background:var(--cream)">
+  <div class="tl-grid">
+    <div class="reveal">
+      <div class="sec-label">Nossa trajetória</div>
+      <h2 class="sec-title" style="margin-bottom:1.2rem">Uma história de<br><em>crescimento</em></h2>
+      <p style="font-size:.9rem;line-height:1.8;color:var(--grey);font-weight:300">Cada ano trouxe novos desafios, novas flores e novos sorrisos. Aqui estão os marcos que nos fizeram quem somos.</p>
+      <div style="margin-top:2rem"><a href="./contato.html" class="btn-outline">Faça parte da história →</a></div>
+    </div>
+    <div class="tl-list reveal">
+      <div class="tl-item"><div class="tl-year">2012</div><div class="tl-title">O começo</div><p class="tl-desc">Abertura da primeira loja na Rua das Flores com 3 funcionários e um sonho grande.</p></div>
+      <div class="tl-item"><div class="tl-year">2015</div><div class="tl-title">Primeiro grande evento</div><p class="tl-desc">Decoração floral completa do casamento Silva & Mendes — referência na região.</p></div>
+      <div class="tl-item"><div class="tl-year">2018</div><div class="tl-title">Expansão e delivery</div><p class="tl-desc">Lançamento do serviço de entrega expressa e início das assinaturas semanais.</p></div>
+      <div class="tl-item"><div class="tl-year">2021</div><div class="tl-title">Loja online</div><p class="tl-desc">Presença digital, pedidos online e atendimento via WhatsApp 7 dias por semana.</p></div>
+      <div class="tl-item"><div class="tl-year">2024</div><div class="tl-title">8.000 clientes felizes</div><p class="tl-desc">Mais de 8 mil famílias atendidas com amor e flores frescas.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="ftop">
+    <div class="fbrand"><a href="./index.html" class="flogo">Flores<em>&</em>Pétalas</a><p>Trazendo beleza e emoção através das flores desde 2012.</p><div class="fsocial"><a href="#">📸</a><a href="#">💬</a><a href="#">📘</a><a href="#">🎵</a></div></div>
+    <div class="fcol"><h4>Loja</h4><ul><li><a href="./produtos.html">Buquês</a></li><li><a href="./produtos.html">Arranjos</a></li><li><a href="./produtos.html">Plantas</a></li><li><a href="./produtos.html">Presentes</a></li></ul></div>
+    <div class="fcol"><h4>Informações</h4><ul><li><a href="./sobre.html">Sobre nós</a></li><li><a href="./servicos.html">Serviços</a></li><li><a href="#">Entrega</a></li><li><a href="#">Trocas</a></li></ul></div>
+    <div class="fcol"><h4>Contato</h4><ul><li><a href="./contato.html">Fale conosco</a></li><li><a href="#">(11) 99999-8888</a></li><li><a href="#">Rua das Flores, 142</a></li><li><a href="#">Seg–Sáb 8h–20h</a></li></ul></div>
+  </div>
+  <div class="fbot"><p>© 2025 Flores & Pétalas. Todos os direitos reservados.</p><div class="fpay"><span>Pix</span><span>Visa</span><span>Master</span><span>Elo</span></div></div>
+</footer>
+<div class="toast" id="toast"></div>
+<script>
+const cur=document.getElementById("cur"),ring=document.getElementById("curRing");
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener("mousemove",e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+"px";cur.style.top=my+"px"});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+"px";ring.style.top=ry+"px";requestAnimationFrame(loop)})();
+document.querySelectorAll("a,button,.membro-card,.valor-card").forEach(el=>{el.addEventListener("mouseenter",()=>{cur.style.transform="translate(-50%,-50%) scale(2)";ring.style.transform="translate(-50%,-50%) scale(1.5)"});el.addEventListener("mouseleave",()=>{cur.style.transform="translate(-50%,-50%) scale(1)";ring.style.transform="translate(-50%,-50%) scale(1)"})});
+const ro=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add("visible"),80*(i%5));ro.unobserve(e.target)}});},{threshold:.1});
+document.querySelectorAll(".reveal").forEach(el=>ro.observe(el));
+let cart=[];
+function toggleCart(){document.getElementById("cartPanel").classList.toggle("open");document.getElementById("cartOverlay").classList.toggle("open")}
+function renderCart(){const body=document.getElementById("cartBody"),empty=document.getElementById("cartEmpty"),foot=document.getElementById("cartFoot"),badge=document.getElementById("badge");const qty=cart.reduce((s,i)=>s+i.qty,0);badge.textContent=qty;badge.classList.toggle("show",qty>0);if(!cart.length){empty.style.display="flex";foot.style.display="none";body.innerHTML="";body.appendChild(empty);return}empty.style.display="none";foot.style.display="block";body.innerHTML=cart.map(it=>`<div class="ci"><div class="ci-thumb" style="background:var(--light)">${it.emoji}</div><div class="ci-info"><div class="ci-name">${it.name}</div><div class="ci-price">R$ ${it.price.toFixed(2).replace(".",",")}</div><div class="ci-qty"><button class="qbtn" onclick="chQty('${it.name}',-1)">−</button><span class="qnum">${it.qty}</span><button class="qbtn" onclick="chQty('${it.name}',1)">+</button></div></div><button class="ci-rm" onclick="rmItem('${it.name}')">✕</button></div>`).join("");const sub=cart.reduce((s,i)=>s+i.price*i.qty,0);document.getElementById("freteFill").style.width=Math.min(100,(sub/150)*100)+"%";const gratis=sub>=150;document.getElementById("freteHint").innerHTML=gratis?"<b style='color:var(--sage)'>🎉 Frete grátis!</b>":`Falta <b>R$ ${(150-sub).toFixed(2).replace(".",",")}</b>`;document.getElementById("cartSub").textContent="R$ "+sub.toFixed(2).replace(".",",");document.getElementById("cartFrete").innerHTML=gratis?"<span style='color:var(--sage)'>Grátis!</span>":"R$ 15,00";document.getElementById("cartTotal").textContent="R$ "+(sub+(gratis?0:15)).toFixed(2).replace(".",",")}
+function chQty(name,d){const it=cart.find(i=>i.name===name);if(!it)return;it.qty+=d;if(it.qty<=0)cart=cart.filter(i=>i.name!==name);renderCart()}
+function rmItem(name){cart=cart.filter(i=>i.name!==name);renderCart()}
+function checkout(){showToast("✓ Redirecionando...");setTimeout(()=>location.href="./contato.html",1400)}
+let tt;function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("show"),2800)}
+renderCart();
+</script>
+</body>
+</html>

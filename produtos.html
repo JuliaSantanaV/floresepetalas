@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Flores & Pétalas — Catálogo</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--cream:#faf7f2;--blush:#f0d4c4;--rose:#b85c50;--deep:#2c1f1f;--sage:#7a9470;--gold:#c4963c;--light:#f5efe8;--white:#fff;--grey:#8a7070}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--deep);overflow-x:hidden;cursor:none}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--light)}::-webkit-scrollbar-thumb{background:var(--blush);border-radius:3px}
+.cur{width:10px;height:10px;background:var(--rose);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .12s}
+.cur-ring{width:32px;height:32px;border:1.5px solid var(--rose);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .18s;opacity:.5}
+.topbar{background:var(--deep);color:rgba(250,247,242,.55);font-size:.68rem;text-transform:uppercase;letter-spacing:.16em;padding:.5rem 0;text-align:center}
+.topbar b{color:var(--gold)}
+nav{position:sticky;top:0;z-index:100;background:rgba(250,247,242,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--blush)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;padding:.85rem 4rem;gap:1.5rem}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:var(--deep);text-decoration:none;letter-spacing:.04em;white-space:nowrap}
+.nav-logo em{color:var(--rose);font-style:normal}
+.nav-links{display:flex;gap:1.8rem;list-style:none}
+.nav-links a{font-size:.74rem;text-transform:uppercase;letter-spacing:.12em;color:var(--deep);text-decoration:none;font-weight:500;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--rose)}
+.nav-actions{display:flex;gap:.3rem}
+.nav-btn{width:38px;height:38px;border:none;background:none;cursor:none;display:flex;align-items:center;justify-content:center;font-size:1.1rem;position:relative;transition:background .2s;border-radius:2px}
+.nav-btn:hover{background:var(--light)}
+.cart-badge{position:absolute;top:3px;right:3px;width:16px;height:16px;background:var(--rose);color:#fff;border-radius:50%;font-size:.55rem;font-weight:700;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.4);transition:all .2s}
+.cart-badge.show{opacity:1;transform:scale(1)}
+.cart-overlay{position:fixed;inset:0;background:rgba(44,31,31,.45);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s}
+.cart-overlay.open{opacity:1;pointer-events:all}
+.cart-panel{position:fixed;top:0;right:0;bottom:0;width:min(420px,100vw);background:#fff;z-index:201;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-16px 0 50px rgba(44,31,31,.12)}
+.cart-panel.open{transform:translateX(0)}
+.cart-head{padding:1.5rem 1.8rem;border-bottom:1px solid var(--blush);display:flex;align-items:center;justify-content:space-between}
+.cart-head h3{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400}
+.cart-close{background:none;border:none;cursor:none;font-size:1.3rem;color:var(--grey)}
+.cart-body{flex:1;overflow-y:auto;padding:1.2rem 1.8rem;display:flex;flex-direction:column;gap:.9rem}
+.cart-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;color:var(--grey);text-align:center}
+.cart-empty span{font-size:2.8rem}
+.cart-empty p{font-size:.85rem}
+.cart-empty a{font-size:.72rem;color:var(--rose);text-decoration:none;text-transform:uppercase;letter-spacing:.12em;border:1px solid var(--rose);padding:.5rem 1.2rem;cursor:none}
+.ci{display:flex;gap:.9rem;align-items:flex-start;padding-bottom:.9rem;border-bottom:1px solid var(--light)}
+.ci-thumb{width:64px;height:64px;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.8rem}
+.ci-info{flex:1;min-width:0}
+.ci-name{font-size:.83rem;font-weight:500;margin-bottom:.15rem}
+.ci-price{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--rose)}
+.ci-qty{display:flex;align-items:center;gap:.45rem;margin-top:.35rem}
+.qbtn{width:22px;height:22px;border:1px solid var(--blush);background:none;cursor:none;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .2s;line-height:1}
+.qbtn:hover{background:var(--rose);color:#fff;border-color:var(--rose)}
+.qnum{font-size:.82rem;min-width:18px;text-align:center;font-weight:500}
+.ci-rm{background:none;border:none;cursor:none;color:#ddd;font-size:.95rem;transition:color .2s;margin-left:auto}
+.ci-rm:hover{color:var(--rose)}
+.cart-foot{padding:1.5rem 1.8rem;border-top:1px solid var(--blush)}
+.frete-bar{width:100%;height:4px;background:var(--light);border-radius:2px;overflow:hidden;margin-bottom:.4rem}
+.frete-fill{height:100%;background:var(--sage);border-radius:2px;transition:width .4s}
+.frete-hint{font-size:.7rem;color:var(--grey);margin-bottom:.9rem}
+.cart-row{display:flex;justify-content:space-between;font-size:.82rem;color:var(--grey);margin-bottom:.45rem}
+.cart-total-row{display:flex;justify-content:space-between;align-items:center;margin:1rem 0 1.3rem}
+.cart-total-row span{font-size:.7rem;text-transform:uppercase;letter-spacing:.14em;color:var(--grey)}
+.cart-total-row strong{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--deep)}
+.btn-checkout{width:100%;padding:.95rem;background:var(--rose);color:#fff;border:none;font-family:'DM Sans',sans-serif;font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;cursor:none;transition:background .3s}
+.btn-checkout:hover{background:var(--deep)}
+.btn-keep{width:100%;padding:.62rem;background:none;border:1px solid var(--blush);font-family:'DM Sans',sans-serif;font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;cursor:none;margin-top:.5rem;color:var(--deep)}
+.page-header{background:linear-gradient(135deg,var(--deep) 0%,#5a3a3a 100%);padding:10rem 5rem 5rem;text-align:center;position:relative;overflow:hidden}
+.page-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(192,103,90,.25) 0%,transparent 65%)}
+.ph-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.22em;color:var(--sage);margin-bottom:.8rem;position:relative}
+.ph-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,5vw,5rem);font-weight:300;color:#fff;line-height:1.1;position:relative}
+.ph-title em{font-style:italic;color:var(--blush)}
+/* FILTROS */
+.filter-bar{background:var(--light);padding:1.8rem 4rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--blush);gap:1.5rem;flex-wrap:wrap}
+.filter-tabs{display:flex;gap:.3rem;flex-wrap:wrap}
+.ftab{padding:.45rem 1.1rem;border:1px solid var(--blush);background:none;font-family:'DM Sans',sans-serif;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;cursor:none;color:var(--deep);transition:all .2s}
+.ftab.active,.ftab:hover{background:var(--deep);color:#fff;border-color:var(--deep)}
+.result-count{font-size:.78rem;color:#aaa}
+.sort-sel{padding:.45rem .9rem;border:1px solid var(--blush);background:#fff;font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--deep);cursor:none;outline:none}
+/* LAYOUT */
+.catalog-wrap{display:grid;grid-template-columns:260px 1fr;gap:2.5rem;padding:3rem 4rem;align-items:start}
+.sidebar{background:var(--light);padding:1.8rem;position:sticky;top:90px}
+.sidebar h3{font-family:'Cormorant Garamond',serif;font-size:1.1rem;margin-bottom:1.4rem;color:var(--deep)}
+.sb-group{margin-bottom:1.8rem}
+.sb-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.14em;color:var(--sage);margin-bottom:.8rem;display:block}
+.price-row{display:flex;justify-content:space-between;font-size:.78rem;color:#aaa;margin-top:.4rem}
+input[type=range]{width:100%;accent-color:var(--rose)}
+.check-group{display:flex;flex-direction:column;gap:.5rem}
+.check-group label{display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:#888;cursor:none}
+input[type=checkbox]{accent-color:var(--rose);cursor:none}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;align-items:start}
+/* CARDS */
+.pcard{background:#fff;overflow:hidden;cursor:none;position:relative;transition:transform .35s,box-shadow .35s}
+.pcard:hover{transform:translateY(-6px);box-shadow:0 20px 55px rgba(44,31,31,.1)}
+.pcard-img{width:100%;aspect-ratio:1;position:relative;overflow:hidden}
+.pcard-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.pcard:hover .pcard-img img{transform:scale(1.06)}
+.pcard-ov{position:absolute;inset:0;background:rgba(44,31,31,.72);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.65rem;opacity:0;transition:opacity .3s;z-index:2}
+.pcard:hover .pcard-ov{opacity:1}
+.ov-btn{padding:.48rem 1.1rem;font-family:'DM Sans',sans-serif;font-size:.66rem;text-transform:uppercase;letter-spacing:.11em;cursor:none;border:none;transition:all .2s}
+.ov-p{background:var(--rose);color:#fff}.ov-p:hover{background:#fff;color:var(--rose)}
+.ov-s{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.3)!important}
+.pbadge{position:absolute;top:.85rem;left:.85rem;font-size:.56rem;text-transform:uppercase;letter-spacing:.1em;padding:.2rem .6rem;z-index:3;font-weight:500}
+.b-hot{background:var(--rose);color:#fff}.b-new{background:var(--sage);color:#fff}.b-off{background:var(--gold);color:#fff}
+.pwish{position:absolute;top:.85rem;right:.85rem;width:28px;height:28px;background:rgba(255,255,255,.9);border:none;border-radius:50%;cursor:none;display:flex;align-items:center;justify-content:center;font-size:.85rem;z-index:3;transition:all .2s}
+.pwish:hover,.pwish.on{background:var(--rose);color:#fff}
+.pinfo{padding:.9rem 1.1rem 1.3rem}
+.pcat{font-size:.59rem;text-transform:uppercase;letter-spacing:.14em;color:var(--sage);margin-bottom:.2rem}
+.pname{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--deep);margin-bottom:.2rem;line-height:1.25}
+.pdesc{font-size:.72rem;color:#bbb;font-weight:300;line-height:1.5;margin-bottom:.65rem}
+.pstars{color:var(--gold);font-size:.6rem;letter-spacing:2px;margin-bottom:.5rem}
+.pstars span{color:var(--grey);font-size:.64rem;margin-left:.25rem}
+.pfoot{display:flex;align-items:center;justify-content:space-between}
+.pprice{font-family:'Cormorant Garamond',serif;font-size:1.38rem;color:var(--rose);line-height:1}
+.pold{font-size:.72rem;color:#ccc;text-decoration:line-through;display:block;font-family:'DM Sans',sans-serif}
+.padd{width:34px;height:34px;background:var(--deep);color:#fff;border:none;cursor:none;font-size:1.15rem;display:flex;align-items:center;justify-content:center;transition:background .2s,transform .15s;flex-shrink:0}
+.padd:hover{background:var(--rose)}
+.padd.ok{background:var(--sage);transform:scale(1.15)}
+.empty-state{grid-column:1/-1;text-align:center;padding:4rem;display:none}
+.empty-state.show{display:block}
+.empty-state p{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#ddd}
+/* CTA */
+.cta-strip{background:var(--deep);padding:5rem;text-align:center}
+.cta-strip h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:300;color:#fff;margin-bottom:1.5rem}
+.cta-strip h2 em{font-style:italic;color:var(--gold)}
+.btn-rose{display:inline-flex;align-items:center;gap:.5rem;background:var(--rose);color:#fff;padding:.9rem 2rem;font-size:.75rem;text-transform:uppercase;letter-spacing:.14em;text-decoration:none;border:2px solid var(--rose);transition:all .3s;cursor:none;font-family:'DM Sans',sans-serif}
+.btn-rose:hover{background:var(--gold);border-color:var(--gold)}
+/* FOOTER */
+footer{background:var(--deep);color:rgba(250,247,242,.4);padding:4rem 4rem 2rem}
+.ftop{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3.5rem;margin-bottom:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.06)}
+.flogo{font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:600;color:rgba(250,247,242,.9);text-decoration:none;letter-spacing:.04em;display:inline-block;margin-bottom:.9rem}
+.flogo em{color:var(--rose);font-style:normal}
+.fbrand p{font-size:.78rem;line-height:1.9;max-width:230px;font-weight:300}
+.fsocial{display:flex;gap:.55rem;margin-top:1.4rem}
+.fsocial a{width:32px;height:32px;border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:rgba(250,247,242,.35);text-decoration:none;font-size:.8rem;transition:all .2s}
+.fsocial a:hover{background:var(--rose);border-color:var(--rose);color:#fff}
+.fcol h4{font-family:'Cormorant Garamond',serif;font-size:.92rem;color:rgba(250,247,242,.88);margin-bottom:1.1rem;font-weight:400}
+.fcol ul{list-style:none;display:flex;flex-direction:column;gap:.48rem}
+.fcol a{color:rgba(250,247,242,.34);text-decoration:none;font-size:.78rem;font-weight:300;transition:color .2s}
+.fcol a:hover{color:var(--blush)}
+.fbot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.fbot p{font-size:.7rem}
+.fpay{display:flex;gap:.4rem}
+.fpay span{background:rgba(255,255,255,.07);padding:.26rem .6rem;font-size:.6rem;color:rgba(250,247,242,.35);letter-spacing:.06em}
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(14px);background:var(--deep);color:#fff;padding:.82rem 1.7rem;font-size:.8rem;border-left:3px solid var(--rose);z-index:500;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;max-width:92vw}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s,transform .7s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@media(max-width:900px){
+  .nav-inner{padding:.8rem 1.5rem}.nav-links{display:none}
+  .filter-bar{padding:1.2rem 1.5rem}
+  .catalog-wrap{grid-template-columns:1fr;padding:2rem 1.5rem}
+  .sidebar{position:static}
+  .pgrid{grid-template-columns:repeat(2,1fr)}
+  .cta-strip{padding:3.5rem 1.5rem}
+  footer{padding:3rem 1.5rem 2rem}.ftop{grid-template-columns:1fr 1fr;gap:2rem}
+}
+</style>
+</head>
+<body>
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="curRing"></div>
+<div class="topbar">🚚 Frete grátis acima de <b>R$ 150</b> &nbsp;·&nbsp; Entrega no mesmo dia até 16h &nbsp;·&nbsp; Cupom <b>FLORES10</b></div>
+<nav>
+  <div class="nav-inner">
+    <a href="./index.html" class="nav-logo">Flores<em>&</em>Pétalas</a>
+    <ul class="nav-links">
+      <li><a href="./index.html">Início</a></li>
+      <li><a href="./produtos.html" class="active">Catálogo</a></li>
+      <li><a href="./servicos.html">Serviços</a></li>
+      <li><a href="./sobre.html">Sobre</a></li>
+      <li><a href="./contato.html">Contato</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-btn" onclick="showToast('💝 Lista de desejos em breve!')">♡</button>
+      <button class="nav-btn" onclick="showToast('👤 Área do cliente em breve!')">👤</button>
+      <button class="nav-btn" onclick="toggleCart()">🛒<span class="cart-badge" id="badge">0</span></button>
+    </div>
+  </div>
+</nav>
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-head"><h3>Meu Carrinho 🌸</h3><button class="cart-close" onclick="toggleCart()">✕</button></div>
+  <div class="cart-body" id="cartBody"><div class="cart-empty" id="cartEmpty"><span>🛒</span><p>Carrinho vazio</p><a href="./produtos.html" onclick="toggleCart()">Ver catálogo →</a></div></div>
+  <div class="cart-foot" id="cartFoot" style="display:none">
+    <div class="frete-bar"><div class="frete-fill" id="freteFill" style="width:0"></div></div>
+    <p class="frete-hint" id="freteHint">Falta <b>R$ 150,00</b> para frete grátis</p>
+    <div class="cart-row"><span>Subtotal</span><span id="cartSub">R$ 0,00</span></div>
+    <div class="cart-row"><span>Frete</span><span id="cartFrete">A calcular</span></div>
+    <div class="cart-total-row"><span>Total</span><strong id="cartTotal">R$ 0,00</strong></div>
+    <button class="btn-checkout" onclick="checkout()">Finalizar compra →</button>
+    <button class="btn-keep" onclick="toggleCart()">Continuar comprando</button>
+  </div>
+</div>
+
+<div class="page-header"><div class="ph-label">Catálogo completo</div><h1 class="ph-title">Nossos <em>produtos</em></h1></div>
+
+<div class="filter-bar">
+  <div class="filter-tabs">
+    <button class="ftab active" onclick="filterProd('todos',this)">Todos</button>
+    <button class="ftab" onclick="filterProd('buque',this)">Buquês</button>
+    <button class="ftab" onclick="filterProd('arranjo',this)">Arranjos</button>
+    <button class="ftab" onclick="filterProd('planta',this)">Plantas</button>
+    <button class="ftab" onclick="filterProd('presente',this)">Presentes</button>
+  </div>
+  <div style="display:flex;align-items:center;gap:1rem">
+    <span class="result-count" id="resCount">12 produtos</span>
+    <select class="sort-sel" onchange="sortProd(this.value)">
+      <option value="">Ordenar por</option>
+      <option value="asc">Menor preço</option>
+      <option value="desc">Maior preço</option>
+      <option value="name">Nome A–Z</option>
+    </select>
+  </div>
+</div>
+
+<div class="catalog-wrap">
+  <aside class="sidebar">
+    <h3>Filtrar</h3>
+    <div class="sb-group">
+      <span class="sb-label">Faixa de preço</span>
+      <input type="range" min="0" max="500" value="500" id="priceRange" oninput="filterPrice(this.value)"/>
+      <div class="price-row"><span>R$ 0</span><span id="priceVal">R$ 500</span></div>
+    </div>
+    <div class="sb-group">
+      <span class="sb-label">Ocasião</span>
+      <div class="check-group">
+        <label><input type="checkbox" checked/> Dia a dia</label>
+        <label><input type="checkbox" checked/> Aniversário</label>
+        <label><input type="checkbox" checked/> Casamento</label>
+        <label><input type="checkbox" checked/> Declaração</label>
+      </div>
+    </div>
+    <div class="sb-group">
+      <span class="sb-label">Cores</span>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <div style="width:26px;height:26px;border-radius:50%;background:#b85c50;border:2px solid var(--rose);cursor:none"></div>
+        <div style="width:26px;height:26px;border-radius:50%;background:#f5d898;border:2px solid transparent;cursor:none"></div>
+        <div style="width:26px;height:26px;border-radius:50%;background:#7a9470;border:2px solid transparent;cursor:none"></div>
+        <div style="width:26px;height:26px;border-radius:50%;background:#d8b8e0;border:2px solid transparent;cursor:none"></div>
+        <div style="width:26px;height:26px;border-radius:50%;background:#fff;border:2px solid var(--blush);cursor:none"></div>
+      </div>
+    </div>
+    <a href="./contato.html" style="display:block;text-align:center;background:var(--rose);color:#fff;padding:.8rem;font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;text-decoration:none;transition:background .2s;cursor:none">Pedir personalizado ✦</a>
+  </aside>
+
+  <div>
+    <div class="pgrid" id="pgrid">
+      <div class="pcard reveal" data-cat="buque" data-price="149" data-name="Buquê Rosas Vermelhas"><div class="pcard-img"><img src="https://images.pexels.com/photos/32136633/pexels-photo-32136633.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Rosas Vermelhas"/><div class="pcard-ov"><button class="ov-btn ov-p" onclick="addCart('Buquê Rosas Vermelhas',149,'🌹',event)">Adicionar</button><button class="ov-btn ov-s" onclick="showToast('📋 Página de detalhe em breve!')">Ver mais</button></div><span class="pbadge b-hot">🔥 Hot</span><button class="pwish" onclick="wish(this,event)">♡</button></div><div class="pinfo"><div class="pcat">Buquê</div><h3 class="pname">Rosas Vermelhas Premium</h3><p class="pdesc">24 rosas importadas com folhagem e embrulho exclusivo</p><div class="pstars">★★★★★<span>(47)</span></div><div class="pfoot"><div class="pprice"><span class="pold">R$ 179</span>R$ 149</div><button class="padd" onclick="addCart('Buquê Rosas Vermelhas',149,'🌹',event)">+</button></div></div></div>
+
+      <div class="pcard reveal" data-cat="arranjo" data-price="189" data-name="Arranjo Primavera"><div class="pcard-img"><img src="https://images.pexels.com/photos/5706744/pexels-photo-5706744.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Arranjo Primavera"/><div class="pcard-ov"><button class="ov-btn ov-p" onclick="addCart('Arranjo Primavera',189,'💐',event)">Adicionar</button></div><span class="pbadge b-new">✨ Novo</span><button class="pwish" onclick="wish(this,event)">♡</button></div><div class="pinfo"><div class="pcat">Arranjo</div><h3 class="pname">Arranjo Primavera</h3><p class="pdesc">Mix colorido em caixa kraft artesanal</p><div class="pstars">★★★★★<span>(32)</span></div><div class="pfoot"><div class="pprice">R$ 189</div><button class="padd" onclick="addCart('Arranjo Primavera',189,'💐',event)">+</button></div></div></div>
+
+      <div class="pcard reveal" data-cat="planta" data-price="129" data-name="Orquídea Phalaenopsis"><div class="pcard-img"><img src="https://images.pexels.com/photos/1037994/pexels-photo-1037994.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Orquídea"/><div class="pcard-ov"><button class="ov-btn ov-p" onclick="addCart('Orquídea Phalaenopsis',129,'🌸',event)">Adicionar</button></div><button class="pwish" onclick="wish(this,event)">♡</button></div><div class="pinfo"><div class="pcat">Planta</div><h3 class="pname">Orquídea Phalaenopsis</h3><p class="pdesc">Em vaso cerâmico artesanal, 2–3 meses</p><div class="pstars">★★★★★<span>(28)</span></div><div class="pfoot"><div class="pprice">R$ 129</div><button class="padd" onclick="addCart('Orquídea Phalaenopsis',129,'🌸',event)">+</button></div></div></div>
+
+      <div class="pcard reveal" data-cat="buque" data-price="219" data-name="Buquê Tulipas"><div class="pcard-img"><img src="https://images.pexels.com/photos/343957/pexels-photo-343957.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Tulipas"/><div class="pcard-ov"><button class="ov-btn ov-p" onclick="addCart('Buquê Tulipas Rosa',219,'🌷',event)">Adicionar</button></div><button class="pwish" onclick="wish(this,event)">♡</button></div><div class="pinfo"><div class="pcat">Buquê</div><h3 class="pname">Tulipas Holandesas</h3><p class="pdesc">20 tulipas importadas com laço de cetim</p><div class="pstars">★★★★☆<span>(19)</span></div><div class="pfoot"><div class="pprice">R$ 219</div><button class="padd" onclick="addCart('Buquê Tulipas Rosa',219,'🌷',event)">+</button></div></div></div>
+
+      <div class="pcard reveal" data-cat="arranjo" data-price="99" data-name="Arranjo Girassóis"><div class="pcard-img"><img src="https://images.pexels.com/photos/5241874/pexels-photo-5241874.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Girassóis"/><div class="pcard-ov"><button class="ov-btn ov-p" onclick="addCart('Arranjo Girassóis',99,'🌻',event)">Adicionar</button></div><span class="pbadge b-off">-30%</span><button class="pwish" onclick="wish(this,event)">♡</button></div><div class="pinfo"><div class="pcat">Arranjo</div><h3 class="pname">Arranjo Girassóis</h3><p class="pdesc">7 girassóis em vaso de vidro decorado</p><div class="pstars">★★★★★<span>(51)</span></div><div class="pfoot"><div class="pprice"><span class="pold">R$ 139</span>R$ 99</div><button class="padd" onclick="addCart('Arranjo Girassóis',99,'🌻',event)">+</button></div></div></div>
+
+      <div class="pcard reveal" data-cat="planta" data-price="79" data-name="Kit Suculentas"><div class="pcard-img"><img src="https://images.pexels.com/photos/776656/pexels-photo-776656.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Suculentas"/><div class="pcard-ov"><button class="ov-btn ov-p" onclick="addCart('Kit Suculentas',79,'🌿',event)">Adicionar</button></div><button class="pwish" onclick="wish(this,event)">♡</button></div><div class="pinfo"><div class="pcat">Planta</div><h3 class="pname">Kit Suculentas</h3><p class="pdesc">3 suculentas em vasos de cimento</p><div class="pstars">★★★★★<span>(63)</span></div><div class="pfoot"><div class="pprice">R$ 79</div><button class="padd" onclick="addCart('Kit Suculentas',79,'🌿',event)">+</button></div></div></div>
+
+      <div class="pcard reveal" data-cat="presente" data-price="259" data-name="Cesta Romântica"><div class="pcard-img"><img src="https://images.pexels.com/photos/2232569/pexels-photo-2232569.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Cesta Romântica"/><div class="pcard-ov"><button class="ov-btn ov-p" onclick="addCart('Cesta Romântica',259,'🎁',event)">Adicionar</button></div><span class="pbadge b-new">💝 Especial</span><button class="pwish" onclick="wish(this,event)">♡</button></div><div class="pinfo"><div class="pcat">Presente</div><h3 class="pname">Cesta Romântica</h3><p class="pdesc">Rosas + chocolates + vinho rosé + cartão</p><div class="pstars">★★★★★<span>(14)</span></div><div class="pfoot"><div class="pprice">R$ 259</div><button class="padd" onclick="addCart('Cesta Romântica',259,'🎁',event)">+</button></div></div></div>
+
+      <div class="pcard reveal" data-cat="buque" data-price="169" data-name="Buquê Callas"><div class="pcard-img"><img src="https://images.pexels.com/photos/19885079/pexels-photo-19885079.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Callas Brancas"/><div class="pcard-ov"><button class="ov-btn ov-p" onclick="addCart('Buquê Callas Brancas',169,'🤍',event)">Adicionar</button></div><button class="pwish" onclick="wish(this,event)">♡</button></div><div class="pinfo"><div class="pcat">Buquê</div><h3 class="pname">Callas Brancas</h3><p class="pdesc">12 callas importadas, elegantes e sofisticadas</p><div class="pstars">★★★★★<span>(11)</span></div><div class="pfoot"><div class="pprice">R$ 169</div><button class="padd" onclick="addCart('Buquê Callas Brancas',169,'🤍',event)">+</button></div></div></div>
+
+      <div class="pcard reveal" data-cat="arranjo" data-price="299" data-name="Centro de Mesa"><div class="pcard-img"><img src="https://images.pexels.com/photos/16962516/pexels-photo-16962516.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Centro de Mesa"/><div class="pcard-ov"><button class="ov-btn ov-p" onclick="addCart('Arranjo Centro de Mesa',299,'💒',event)">Adicionar</button></div><span class="pbadge b-new">Especial</span><button class="pwish" onclick="wish(this,event)">♡</button></div><div class="pinfo"><div class="pcat">Arranjo</div><h3 class="pname">Centro de Mesa</h3><p class="pdesc">Arranjo premium para mesas de eventos</p><div class="pstars">★★★★★<span>(8)</span></div><div class="pfoot"><div class="pprice">R$ 299</div><button class="padd" onclick="addCart('Arranjo Centro de Mesa',299,'💒',event)">+</button></div></div></div>
+
+      <div class="pcard reveal" data-cat="planta" data-price="95" data-name="Bromélia"><div class="pcard-img"><img src="https://images.pexels.com/photos/33353/pexels-photo-33353.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Bromélia"/><div class="pcard-ov"><button class="ov-btn ov-p" onclick="addCart('Bromélia Colorida',95,'🪴',event)">Adicionar</button></div><button class="pwish" onclick="wish(this,event)">♡</button></div><div class="pinfo"><div class="pcat">Planta</div><h3 class="pname">Bromélia Colorida</h3><p class="pdesc">Bromélia exótica em cachepô moderno</p><div class="pstars">★★★★☆<span>(17)</span></div><div class="pfoot"><div class="pprice">R$ 95</div><button class="padd" onclick="addCart('Bromélia Colorida',95,'🪴',event)">+</button></div></div></div>
+
+      <div class="pcard reveal" data-cat="presente" data-price="189" data-name="Box Bem-Estar"><div class="pcard-img"><img src="https://images.pexels.com/photos/6231825/pexels-photo-6231825.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Box Bem-Estar"/><div class="pcard-ov"><button class="ov-btn ov-p" onclick="addCart('Box Bem-Estar',189,'🧴',event)">Adicionar</button></div><span class="pbadge b-new">Lançamento</span><button class="pwish" onclick="wish(this,event)">♡</button></div><div class="pinfo"><div class="pcat">Presente</div><h3 class="pname">Box Bem-Estar</h3><p class="pdesc">Orquídea + vela aromática + sachê de lavanda</p><div class="pstars">★★★★★<span>(9)</span></div><div class="pfoot"><div class="pprice">R$ 189</div><button class="padd" onclick="addCart('Box Bem-Estar',189,'🧴',event)">+</button></div></div></div>
+
+      <div class="pcard reveal" data-cat="buque" data-price="89" data-name="Buquê Margaridas"><div class="pcard-img"><img src="https://images.pexels.com/photos/1457790/pexels-photo-1457790.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Margaridas"/><div class="pcard-ov"><button class="ov-btn ov-p" onclick="addCart('Buquê Margaridas',89,'🌼',event)">Adicionar</button></div><button class="pwish" onclick="wish(this,event)">♡</button></div><div class="pinfo"><div class="pcat">Buquê</div><h3 class="pname">Buquê Margaridas</h3><p class="pdesc">Margaridas frescas com baby breath</p><div class="pstars">★★★★☆<span>(22)</span></div><div class="pfoot"><div class="pprice">R$ 89</div><button class="padd" onclick="addCart('Buquê Margaridas',89,'🌼',event)">+</button></div></div></div>
+
+      <div class="empty-state" id="emptyState"><p>Nenhum produto encontrado 🌸</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="cta-strip"><h2>Não encontrou o que busca?<br>Criamos arranjos <em>personalizados</em></h2><a href="./contato.html" class="btn-rose">Solicitar arranjo especial →</a></div>
+
+<footer>
+  <div class="ftop">
+    <div class="fbrand"><a href="./index.html" class="flogo">Flores<em>&</em>Pétalas</a><p>Trazendo beleza e emoção através das flores desde 2012.</p><div class="fsocial"><a href="#">📸</a><a href="#">💬</a><a href="#">📘</a><a href="#">🎵</a></div></div>
+    <div class="fcol"><h4>Loja</h4><ul><li><a href="./produtos.html">Buquês</a></li><li><a href="./produtos.html">Arranjos</a></li><li><a href="./produtos.html">Plantas</a></li><li><a href="./produtos.html">Presentes</a></li></ul></div>
+    <div class="fcol"><h4>Informações</h4><ul><li><a href="./sobre.html">Sobre nós</a></li><li><a href="./servicos.html">Serviços</a></li><li><a href="#">Entrega</a></li><li><a href="#">Trocas</a></li></ul></div>
+    <div class="fcol"><h4>Contato</h4><ul><li><a href="./contato.html">Fale conosco</a></li><li><a href="#">(11) 99999-8888</a></li><li><a href="#">Rua das Flores, 142</a></li><li><a href="#">Seg–Sáb 8h–20h</a></li></ul></div>
+  </div>
+  <div class="fbot"><p>© 2025 Flores & Pétalas. Todos os direitos reservados.</p><div class="fpay"><span>Pix</span><span>Visa</span><span>Master</span><span>Elo</span></div></div>
+</footer>
+<div class="toast" id="toast"></div>
+<script>
+const cur=document.getElementById("cur"),ring=document.getElementById("curRing");
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener("mousemove",e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+"px";cur.style.top=my+"px"});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+"px";ring.style.top=ry+"px";requestAnimationFrame(loop)})();
+document.querySelectorAll("a,button,.pcard").forEach(el=>{el.addEventListener("mouseenter",()=>{cur.style.transform="translate(-50%,-50%) scale(2)";ring.style.transform="translate(-50%,-50%) scale(1.5)"});el.addEventListener("mouseleave",()=>{cur.style.transform="translate(-50%,-50%) scale(1)";ring.style.transform="translate(-50%,-50%) scale(1)"})});
+const ro=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add("visible"),80*(i%5));ro.unobserve(e.target)}});},{threshold:.1});
+document.querySelectorAll(".reveal").forEach(el=>ro.observe(el));
+let cart=[];
+function toggleCart(){document.getElementById("cartPanel").classList.toggle("open");document.getElementById("cartOverlay").classList.toggle("open")}
+function addCart(name,price,emoji,ev){if(ev)ev.stopPropagation();const ex=cart.find(i=>i.name===name);if(ex)ex.qty++;else cart.push({name,price,emoji,qty:1});renderCart();showToast("🌸 "+name+" adicionado!");const btn=ev&&ev.currentTarget;if(btn&&btn.classList.contains("padd")){btn.classList.add("ok");setTimeout(()=>btn.classList.remove("ok"),1200)}}
+function renderCart(){const body=document.getElementById("cartBody"),empty=document.getElementById("cartEmpty"),foot=document.getElementById("cartFoot"),badge=document.getElementById("badge");const qty=cart.reduce((s,i)=>s+i.qty,0);badge.textContent=qty;badge.classList.toggle("show",qty>0);if(!cart.length){empty.style.display="flex";foot.style.display="none";body.innerHTML="";body.appendChild(empty);return}empty.style.display="none";foot.style.display="block";body.innerHTML=cart.map(it=>`<div class="ci"><div class="ci-thumb" style="background:var(--light)">${it.emoji}</div><div class="ci-info"><div class="ci-name">${it.name}</div><div class="ci-price">R$ ${it.price.toFixed(2).replace(".",",")}</div><div class="ci-qty"><button class="qbtn" onclick="chQty('${it.name}',-1)">−</button><span class="qnum">${it.qty}</span><button class="qbtn" onclick="chQty('${it.name}',1)">+</button></div></div><button class="ci-rm" onclick="rmItem('${it.name}')">✕</button></div>`).join("");const sub=cart.reduce((s,i)=>s+i.price*i.qty,0);document.getElementById("freteFill").style.width=Math.min(100,(sub/150)*100)+"%";const gratis=sub>=150;document.getElementById("freteHint").innerHTML=gratis?"<b style='color:var(--sage)'>🎉 Frete grátis!</b>":`Falta <b>R$ ${(150-sub).toFixed(2).replace(".",",")}</b>`;document.getElementById("cartSub").textContent="R$ "+sub.toFixed(2).replace(".",",");document.getElementById("cartFrete").innerHTML=gratis?"<span style='color:var(--sage)'>Grátis!</span>":"R$ 15,00";document.getElementById("cartTotal").textContent="R$ "+(sub+(gratis?0:15)).toFixed(2).replace(".",",")}
+function chQty(name,d){const it=cart.find(i=>i.name===name);if(!it)return;it.qty+=d;if(it.qty<=0)cart=cart.filter(i=>i.name!==name);renderCart()}
+function rmItem(name){cart=cart.filter(i=>i.name!==name);renderCart()}
+function checkout(){showToast("✓ Redirecionando...");setTimeout(()=>location.href="./contato.html",1400)}
+function wish(btn,ev){if(ev)ev.stopPropagation();btn.classList.toggle("on");btn.textContent=btn.classList.contains("on")?"♥":"♡";if(btn.classList.contains("on"))showToast("💝 Adicionado à lista de desejos!")}
+let currentCat="todos",maxPrice=500;
+function filterProd(cat,btn){currentCat=cat;document.querySelectorAll(".ftab").forEach(b=>b.classList.remove("active"));btn.classList.add("active");applyFilters()}
+function filterPrice(v){maxPrice=+v;document.getElementById("priceVal").textContent="R$ "+v;applyFilters()}
+function applyFilters(){const cards=[...document.querySelectorAll(".pcard[data-cat]")];cards.forEach(c=>{const ok=(currentCat==="todos"||c.dataset.cat===currentCat)&&+c.dataset.price<=maxPrice;c.style.display=ok?"":"none"});const vis=cards.filter(c=>c.style.display!=="none").length;document.getElementById("resCount").textContent=vis+" produto"+(vis!==1?"s":"");document.getElementById("emptyState").classList.toggle("show",vis===0)}
+function sortProd(v){const grid=document.getElementById("pgrid");const cards=[...document.querySelectorAll(".pcard[data-cat]")];cards.sort((a,b)=>{if(v==="asc")return+a.dataset.price-+b.dataset.price;if(v==="desc")return+b.dataset.price-+a.dataset.price;if(v==="name")return a.dataset.name.localeCompare(b.dataset.name);return 0});cards.forEach(c=>grid.insertBefore(c,document.getElementById("emptyState")))}
+let tt;function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("show"),2800)}
+renderCart();
+</script>
+</body>
+</html>

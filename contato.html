@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Flores & Pétalas — Contato</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--cream:#faf7f2;--blush:#f0d4c4;--rose:#b85c50;--deep:#2c1f1f;--sage:#7a9470;--gold:#c4963c;--light:#f5efe8;--white:#fff;--grey:#8a7070}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--deep);overflow-x:hidden;cursor:none}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--light)}::-webkit-scrollbar-thumb{background:var(--blush);border-radius:3px}
+.cur{width:10px;height:10px;background:var(--rose);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .12s}
+.cur-ring{width:32px;height:32px;border:1.5px solid var(--rose);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .18s;opacity:.5}
+
+/* TOPBAR */
+.topbar{background:var(--deep);color:rgba(250,247,242,.55);font-size:.68rem;text-transform:uppercase;letter-spacing:.16em;padding:.5rem 0;text-align:center}
+.topbar b{color:var(--gold)}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(250,247,242,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--blush)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;padding:.85rem 4rem;gap:1.5rem}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:var(--deep);text-decoration:none;letter-spacing:.04em;white-space:nowrap}
+.nav-logo em{color:var(--rose);font-style:normal}
+.nav-links{display:flex;gap:1.8rem;list-style:none}
+.nav-links a{font-size:.74rem;text-transform:uppercase;letter-spacing:.12em;color:var(--deep);text-decoration:none;font-weight:500;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--rose)}
+.nav-actions{display:flex;gap:.3rem}
+.nav-btn{width:38px;height:38px;border:none;background:none;cursor:none;display:flex;align-items:center;justify-content:center;font-size:1.1rem;position:relative;transition:background .2s;border-radius:2px}
+.nav-btn:hover{background:var(--light)}
+.cart-badge{position:absolute;top:3px;right:3px;width:16px;height:16px;background:var(--rose);color:#fff;border-radius:50%;font-size:.55rem;font-weight:700;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.4);transition:all .2s}
+.cart-badge.show{opacity:1;transform:scale(1)}
+
+/* CART */
+.cart-overlay{position:fixed;inset:0;background:rgba(44,31,31,.45);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s}
+.cart-overlay.open{opacity:1;pointer-events:all}
+.cart-panel{position:fixed;top:0;right:0;bottom:0;width:min(420px,100vw);background:#fff;z-index:201;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-16px 0 50px rgba(44,31,31,.12)}
+.cart-panel.open{transform:translateX(0)}
+.cart-head{padding:1.5rem 1.8rem;border-bottom:1px solid var(--blush);display:flex;align-items:center;justify-content:space-between}
+.cart-head h3{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400}
+.cart-close{background:none;border:none;cursor:none;font-size:1.3rem;color:var(--grey);transition:color .2s}
+.cart-close:hover{color:var(--rose)}
+.cart-body{flex:1;overflow-y:auto;padding:1.2rem 1.8rem;display:flex;flex-direction:column;gap:.9rem}
+.cart-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;color:var(--grey);text-align:center}
+.cart-empty span{font-size:2.8rem}
+.cart-empty p{font-size:.85rem}
+.cart-empty a{font-size:.72rem;color:var(--rose);text-decoration:none;text-transform:uppercase;letter-spacing:.12em;border:1px solid var(--rose);padding:.5rem 1.2rem;cursor:none}
+.ci{display:flex;gap:.9rem;align-items:flex-start;padding-bottom:.9rem;border-bottom:1px solid var(--light)}
+.ci-thumb{width:64px;height:64px;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.8rem;background:var(--light)}
+.ci-info{flex:1;min-width:0}
+.ci-name{font-size:.83rem;font-weight:500;margin-bottom:.15rem}
+.ci-price{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--rose)}
+.ci-qty{display:flex;align-items:center;gap:.45rem;margin-top:.35rem}
+.qbtn{width:22px;height:22px;border:1px solid var(--blush);background:none;cursor:none;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .2s;line-height:1}
+.qbtn:hover{background:var(--rose);color:#fff;border-color:var(--rose)}
+.qnum{font-size:.82rem;min-width:18px;text-align:center;font-weight:500}
+.ci-rm{background:none;border:none;cursor:none;color:#ddd;font-size:.95rem;transition:color .2s;margin-left:auto}
+.ci-rm:hover{color:var(--rose)}
+.cart-foot{padding:1.5rem 1.8rem;border-top:1px solid var(--blush)}
+.frete-bar{width:100%;height:4px;background:var(--light);border-radius:2px;overflow:hidden;margin-bottom:.4rem}
+.frete-fill{height:100%;background:var(--sage);border-radius:2px;transition:width .4s}
+.frete-hint{font-size:.7rem;color:var(--grey);margin-bottom:.9rem}
+.cart-row{display:flex;justify-content:space-between;font-size:.82rem;color:var(--grey);margin-bottom:.45rem}
+.cart-total-row{display:flex;justify-content:space-between;align-items:center;margin:1rem 0 1.3rem}
+.cart-total-row span{font-size:.7rem;text-transform:uppercase;letter-spacing:.14em;color:var(--grey)}
+.cart-total-row strong{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--deep)}
+.btn-checkout{width:100%;padding:.95rem;background:var(--rose);color:#fff;border:none;font-family:'DM Sans',sans-serif;font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;cursor:none;transition:background .3s}
+.btn-checkout:hover{background:var(--deep)}
+.btn-keep{width:100%;padding:.62rem;background:none;border:1px solid var(--blush);font-family:'DM Sans',sans-serif;font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;cursor:none;margin-top:.5rem;color:var(--deep);transition:background .2s}
+.btn-keep:hover{background:var(--light)}
+
+/* PAGE HEADER */
+.page-header{background:linear-gradient(135deg,var(--deep) 0%,#5a3a3a 100%);padding:10rem 5rem 5rem;text-align:center;position:relative;overflow:hidden}
+.page-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(192,103,90,.25) 0%,transparent 65%)}
+.ph-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.22em;color:var(--sage);margin-bottom:.8rem;position:relative}
+.ph-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,5vw,5rem);font-weight:300;color:#fff;line-height:1.1;position:relative}
+.ph-title em{font-style:italic;color:var(--blush)}
+
+/* SHARED */
+.sec-label{font-size:.62rem;text-transform:uppercase;letter-spacing:.22em;color:var(--sage);margin-bottom:.3rem}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.7rem,3vw,2.7rem);font-weight:300;color:var(--deep);line-height:1.15}
+.sec-title em{font-style:italic;color:var(--rose)}
+.btn-rose{display:inline-flex;align-items:center;gap:.5rem;background:var(--rose);color:#fff;padding:.9rem 2rem;font-size:.75rem;text-transform:uppercase;letter-spacing:.14em;text-decoration:none;border:2px solid var(--rose);transition:all .3s;cursor:none;font-family:'DM Sans',sans-serif}
+.btn-rose:hover{background:var(--deep);border-color:var(--deep)}
+.reveal{opacity:1;transform:translateY(0);transition:opacity .7s,transform .7s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* CONTATO GRID */
+.contato-wrap{display:grid;grid-template-columns:1fr 1.3fr;gap:5rem;padding:5rem 4rem;align-items:start;background:var(--cream)}
+
+/* INFO */
+.info-intro{font-size:.93rem;line-height:1.9;color:var(--grey);font-weight:300;margin-bottom:2rem}
+.citem{display:flex;align-items:flex-start;gap:1.2rem;padding:1.3rem 0;border-bottom:1px solid var(--blush)}
+.citem-icon{width:42px;height:42px;background:var(--light);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.citem-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.16em;color:var(--sage);margin-bottom:.2rem}
+.citem-val{font-size:.9rem;color:var(--deep);font-weight:400}
+.citem-sub{font-size:.78rem;color:#aaa;margin-top:.1rem}
+.map-box{margin-top:2rem;width:100%;height:180px;background:linear-gradient(135deg,#e8ddd5,#d4c5b8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem}
+.map-box p{font-size:.78rem;color:#888;font-weight:300}
+.map-pin{font-size:2.5rem;animation:pinBounce 1.5s ease-in-out infinite}
+@keyframes pinBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.social-cards{display:flex;gap:.8rem;margin-top:2rem}
+.sc{flex:1;background:var(--light);padding:1.1rem;display:flex;flex-direction:column;align-items:center;gap:.4rem;text-decoration:none;color:var(--deep);transition:background .2s;cursor:none}
+.sc:hover{background:var(--blush)}
+.sc-icon{font-size:1.4rem}
+.sc-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:#888}
+
+/* FORM */
+.form-wrap{background:#fff;padding:3rem}
+.form-title{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--deep);margin-bottom:.3rem}
+.form-sub{font-size:.82rem;color:#aaa;margin-bottom:2rem;line-height:1.6}
+.fform{display:flex;flex-direction:column;gap:1rem}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.fg{display:flex;flex-direction:column;gap:.35rem}
+.fg label{font-size:.64rem;text-transform:uppercase;letter-spacing:.14em;color:var(--sage)}
+.fg input,.fg textarea,.fg select{padding:.85rem 1rem;border:1px solid var(--blush);background:var(--cream);font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--deep);outline:none;transition:border-color .2s,background .2s;cursor:none}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--rose);background:#fff}
+.fg textarea{resize:none;height:120px}
+.char-count{font-size:.67rem;color:#ccc;text-align:right;margin-top:.2rem}
+.lgpd-row{display:flex;align-items:flex-start;gap:.6rem}
+.lgpd-row input{accent-color:var(--rose);cursor:none;margin-top:3px;flex-shrink:0}
+.lgpd-row label{font-size:.78rem;color:#aaa;line-height:1.5;cursor:none}
+.submit-btn{display:inline-flex;align-items:center;gap:.5rem;background:var(--rose);color:#fff;padding:1rem 2.4rem;border:none;font-family:'DM Sans',sans-serif;font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;cursor:none;transition:background .3s;align-self:flex-start}
+.submit-btn:hover{background:var(--deep)}
+.loading-box{display:none;align-items:center;gap:1rem;padding:1.2rem;background:var(--light);margin-top:.8rem;font-size:.85rem;color:#888}
+.spinner{width:20px;height:20px;border:2px solid var(--blush);border-top-color:var(--rose);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.success-box{display:none;background:var(--sage);color:#fff;padding:2rem;margin-top:.8rem}
+.success-box h3{font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:.5rem}
+.success-box p{font-size:.88rem;line-height:1.7;opacity:.9}
+
+/* HORÁRIOS */
+.horarios-section{background:var(--light);padding:5rem 4rem}
+.horarios-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2.5rem}
+.horario{background:#fff;padding:2rem;text-align:center;border-top:3px solid transparent;transition:border-color .3s}
+.horario.hoje{border-color:var(--sage)}
+.horario-icon{font-size:1.5rem;margin-bottom:.5rem}
+.horario-dia{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--deep);margin-bottom:.4rem}
+.horario-hora{font-size:.88rem;color:var(--rose);font-weight:500}
+.horario-sub{font-size:.7rem;color:#aaa;margin-top:.3rem}
+
+/* DEPOIMENTOS MINI */
+.dep-section{padding:5rem 4rem;background:#fff}
+.dep-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;margin-top:2.5rem}
+.dep{padding:1.8rem;background:var(--light);position:relative}
+.dep::before{content:'"';font-family:'Cormorant Garamond',serif;font-size:5rem;color:var(--blush);position:absolute;top:-.5rem;left:1.4rem;line-height:1;opacity:.6}
+.dep-stars{color:var(--gold);font-size:.6rem;letter-spacing:2px;margin-bottom:.85rem}
+.dep-txt{font-size:.83rem;line-height:1.88;color:var(--grey);font-weight:300;padding-top:1.5rem;margin-bottom:1.3rem}
+.dep-author{display:flex;align-items:center;gap:.75rem}
+.dep-av{width:36px;height:36px;border-radius:50%;background:var(--blush);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.dep-name{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--deep)}
+.dep-det{font-size:.65rem;color:#ccc;margin-top:.08rem}
+
+/* FOOTER */
+footer{background:var(--deep);color:rgba(250,247,242,.4);padding:4rem 4rem 2rem}
+.ftop{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3.5rem;margin-bottom:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.06)}
+.flogo{font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:600;color:rgba(250,247,242,.9);text-decoration:none;letter-spacing:.04em;display:inline-block;margin-bottom:.9rem}
+.flogo em{color:var(--rose);font-style:normal}
+.fbrand p{font-size:.78rem;line-height:1.9;max-width:230px;font-weight:300}
+.fsocial{display:flex;gap:.55rem;margin-top:1.4rem}
+.fsocial a{width:32px;height:32px;border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:rgba(250,247,242,.35);text-decoration:none;font-size:.8rem;transition:all .2s}
+.fsocial a:hover{background:var(--rose);border-color:var(--rose);color:#fff}
+.fcol h4{font-family:'Cormorant Garamond',serif;font-size:.92rem;color:rgba(250,247,242,.88);margin-bottom:1.1rem;font-weight:400}
+.fcol ul{list-style:none;display:flex;flex-direction:column;gap:.48rem}
+.fcol a{color:rgba(250,247,242,.34);text-decoration:none;font-size:.78rem;font-weight:300;transition:color .2s}
+.fcol a:hover{color:var(--blush)}
+.fbot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.fbot p{font-size:.7rem}
+.fpay{display:flex;gap:.4rem}
+.fpay span{background:rgba(255,255,255,.07);padding:.26rem .6rem;font-size:.6rem;color:rgba(250,247,242,.35);letter-spacing:.06em}
+
+/* TOAST */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(14px);background:var(--deep);color:#fff;padding:.82rem 1.7rem;font-size:.8rem;border-left:3px solid var(--rose);z-index:500;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;max-width:92vw}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:900px){
+  .nav-inner{padding:.8rem 1.5rem}.nav-links{display:none}
+  .contato-wrap{grid-template-columns:1fr;padding:3rem 1.5rem;gap:3rem}
+  .horarios-section{padding:3.5rem 1.5rem}.horarios-grid{grid-template-columns:1fr}
+  .dep-section{padding:3.5rem 1.5rem}.dep-grid{grid-template-columns:1fr}
+  .frow{grid-template-columns:1fr}
+  .form-wrap{padding:2rem 1.5rem}
+  footer{padding:3rem 1.5rem 2rem}.ftop{grid-template-columns:1fr 1fr;gap:2rem}
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="curRing"></div>
+
+<div class="topbar">🚚 Frete grátis acima de <b>R$ 150</b> &nbsp;·&nbsp; Entrega no mesmo dia até 16h &nbsp;·&nbsp; Cupom <b>FLORES10</b></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="./index.html" class="nav-logo">Flores<em>&</em>Pétalas</a>
+    <ul class="nav-links">
+      <li><a href="./index.html">Início</a></li>
+      <li><a href="./produtos.html">Catálogo</a></li>
+      <li><a href="./servicos.html">Serviços</a></li>
+      <li><a href="./sobre.html">Sobre</a></li>
+      <li><a href="./contato.html" class="active">Contato</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-btn" onclick="showToast('💝 Lista de desejos em breve!')">♡</button>
+      <button class="nav-btn" onclick="showToast('👤 Área do cliente em breve!')">👤</button>
+      <button class="nav-btn" onclick="toggleCart()">🛒<span class="cart-badge" id="badge">0</span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- CART -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-head"><h3>Meu Carrinho 🌸</h3><button class="cart-close" onclick="toggleCart()">✕</button></div>
+  <div class="cart-body" id="cartBody">
+    <div class="cart-empty" id="cartEmpty"><span>🛒</span><p>Carrinho vazio</p><a href="./produtos.html" onclick="toggleCart()">Ver catálogo →</a></div>
+  </div>
+  <div class="cart-foot" id="cartFoot" style="display:none">
+    <div class="frete-bar"><div class="frete-fill" id="freteFill" style="width:0"></div></div>
+    <p class="frete-hint" id="freteHint">Falta <b>R$ 150,00</b> para frete grátis</p>
+    <div class="cart-row"><span>Subtotal</span><span id="cartSub">R$ 0,00</span></div>
+    <div class="cart-row"><span>Frete</span><span id="cartFrete">A calcular</span></div>
+    <div class="cart-total-row"><span>Total</span><strong id="cartTotal">R$ 0,00</strong></div>
+    <button class="btn-checkout" onclick="showToast('✓ Pedido confirmado! Entraremos em contato. 🌸')">Confirmar pedido →</button>
+    <button class="btn-keep" onclick="toggleCart()">Continuar comprando</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="ph-label">Fale conosco</div>
+  <h1 class="ph-title">Entre em <em>contato</em></h1>
+</div>
+
+<!-- CONTATO PRINCIPAL -->
+<div class="contato-wrap">
+
+  <!-- INFO -->
+  <div class="reveal">
+    <div class="sec-label">Informações</div>
+    <h2 class="sec-title" style="margin-bottom:1.2rem">Como nos <em>encontrar</em></h2>
+    <p class="info-intro">Estamos aqui para transformar suas ocasiões especiais em momentos únicos. Entre em contato pela forma que preferir — respondemos rapidamente!</p>
+
+    <div class="citem">
+      <div class="citem-icon">📍</div>
+      <div><div class="citem-label">Endereço</div><div class="citem-val">Rua das Flores, 142 — Centro</div><div class="citem-sub">Próximo ao Mercado Municipal</div></div>
+    </div>
+    <div class="citem">
+      <div class="citem-icon">📞</div>
+      <div><div class="citem-label">Telefone</div><div class="citem-val">(11) 3333-4444</div><div class="citem-sub">Ligações e chamadas</div></div>
+    </div>
+    <div class="citem">
+      <div class="citem-icon">💬</div>
+      <div><div class="citem-label">WhatsApp</div><div class="citem-val">(11) 99999-8888</div><div class="citem-sub">Resposta em até 30 minutos</div></div>
+    </div>
+    <div class="citem">
+      <div class="citem-icon">✉️</div>
+      <div><div class="citem-label">E-mail</div><div class="citem-val">contato@florespetalas.com.br</div><div class="citem-sub">Respondemos em até 4 horas</div></div>
+    </div>
+
+    <div class="map-box">
+      <span class="map-pin">📍</span>
+      <p>Rua das Flores, 142 — Centro</p>
+    </div>
+
+    <div class="social-cards">
+      <a href="#" class="sc"><span class="sc-icon">📸</span><span class="sc-label">Instagram</span></a>
+      <a href="#" class="sc"><span class="sc-icon">💬</span><span class="sc-label">WhatsApp</span></a>
+      <a href="#" class="sc"><span class="sc-icon">📘</span><span class="sc-label">Facebook</span></a>
+    </div>
+  </div>
+
+  <!-- FORMULÁRIO -->
+  <div class="form-wrap reveal">
+    <h3 class="form-title">Envie uma mensagem</h3>
+    <p class="form-sub">Preencha o formulário e retornaremos em breve com atenção e carinho. 🌸</p>
+
+    <form class="fform" id="fform">
+      <div class="frow">
+        <div class="fg"><label>Nome completo *</label><input type="text" id="fnome" placeholder="Seu nome" required/></div>
+        <div class="fg"><label>WhatsApp</label><input type="tel" placeholder="(11) 99999-9999"/></div>
+      </div>
+      <div class="fg"><label>E-mail *</label><input type="email" id="femail" placeholder="seu@email.com" required/></div>
+      <div class="frow">
+        <div class="fg">
+          <label>Tipo de pedido</label>
+          <select>
+            <option value="">Selecione...</option>
+            <option>Buquê avulso</option>
+            <option>Arranjo personalizado</option>
+            <option>Casamento / Noivado</option>
+            <option>Evento / Festa</option>
+            <option>Assinatura mensal</option>
+            <option>Dúvida geral</option>
+          </select>
+        </div>
+        <div class="fg"><label>Data desejada</label><input type="date"/></div>
+      </div>
+      <div class="fg">
+        <label>Mensagem *</label>
+        <textarea id="fmsg" placeholder="Descreva seu pedido ou dúvida com detalhes..." required oninput="updateChar(this)"></textarea>
+        <div class="char-count" id="charCount">0 / 500</div>
+      </div>
+      <div class="lgpd-row">
+        <input type="checkbox" id="lgpd" required/>
+        <label for="lgpd">Concordo com o uso dos meus dados para retorno de contato.</label>
+      </div>
+      <button type="submit" class="submit-btn" id="submitBtn">Enviar mensagem ✦</button>
+    </form>
+
+    <div class="loading-box" id="loadingBox">
+      <div class="spinner"></div>
+      <span>Enviando sua mensagem...</span>
+    </div>
+
+    <div class="success-box" id="successBox">
+      <h3>Mensagem enviada! 🌸</h3>
+      <p>Recebemos seu contato com sucesso. Nossa equipe retornará em breve — geralmente em até 30 minutos durante o horário de atendimento.</p>
+      <a href="./produtos.html" class="btn-rose" style="margin-top:1.2rem">Ver catálogo →</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- HORÁRIOS -->
+<section class="horarios-section">
+  <div class="reveal" style="text-align:center">
+    <div class="sec-label">Quando atendemos</div>
+    <h2 class="sec-title">Horário de <em>funcionamento</em></h2>
+  </div>
+  <div class="horarios-grid">
+    <div class="horario reveal" id="h1">
+      <div class="horario-icon">🌞</div>
+      <div class="horario-dia">Segunda a Sexta</div>
+      <div class="horario-hora">8h00 às 20h00</div>
+      <div class="horario-sub">Abertura e fechamento pontuais</div>
+    </div>
+    <div class="horario reveal" id="h2">
+      <div class="horario-icon">🌸</div>
+      <div class="horario-dia">Sábados</div>
+      <div class="horario-hora">8h00 às 18h00</div>
+      <div class="horario-sub">Atendimento especial para eventos</div>
+    </div>
+    <div class="horario reveal" id="h3">
+      <div class="horario-icon">☀️</div>
+      <div class="horario-dia">Domingos</div>
+      <div class="horario-hora">9h00 às 14h00</div>
+      <div class="horario-sub">Pedidos com antecedência recomendados</div>
+    </div>
+  </div>
+  <p style="text-align:center;margin-top:2rem;font-size:.82rem;color:#aaa">📞 WhatsApp disponível fora do horário para pedidos agendados</p>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="dep-section">
+  <div class="reveal" style="text-align:center">
+    <div class="sec-label">Quem já entrou em contato</div>
+    <h2 class="sec-title">Clientes que <em>adoraram</em></h2>
+  </div>
+  <div class="dep-grid">
+    <div class="dep reveal">
+      <div class="dep-stars">★★★★★</div>
+      <p class="dep-txt">Entrei em contato pelo site e em menos de 20 minutos já tinha meu orçamento! O atendimento foi incrível, super atencioso.</p>
+      <div class="dep-author"><div class="dep-av">🌺</div><div><div class="dep-name">Fernanda Rodrigues</div><div class="dep-det">Arranjo personalizado · Jan 2025</div></div></div>
+    </div>
+    <div class="dep reveal">
+      <div class="dep-stars">★★★★★</div>
+      <p class="dep-txt">Pedi o buquê de último minuto pelo WhatsApp e chegou no horário que precisava. Surpreendente! Com certeza voltarei sempre.</p>
+      <div class="dep-author"><div class="dep-av">💐</div><div><div class="dep-name">Roberto Mendes</div><div class="dep-det">Entrega expressa · Fev 2025</div></div></div>
+    </div>
+    <div class="dep reveal">
+      <div class="dep-stars">★★★★★</div>
+      <p class="dep-txt">A equipe entendeu exatamente o que eu queria para o meu casamento. Ficou ainda mais lindo do que eu imaginava!</p>
+      <div class="dep-author"><div class="dep-av">👰</div><div><div class="dep-name">Juliana & Pedro</div><div class="dep-det">Casamento · Mar 2025</div></div></div>
+    </div>
+    <div class="dep reveal">
+      <div class="dep-stars">★★★★★</div>
+      <p class="dep-txt">Uso a assinatura há 6 meses e toda semana fico surpresa com as flores lindas que chegam! Vale cada centavo.</p>
+      <div class="dep-author"><div class="dep-av">🌷</div><div><div class="dep-name">Camila Torres</div><div class="dep-det">Assinatura semanal · Regular</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ftop">
+    <div class="fbrand">
+      <a href="./index.html" class="flogo">Flores<em>&</em>Pétalas</a>
+      <p>Trazendo beleza e emoção através das flores desde 2012. Flores frescas, entrega rápida, muito carinho.</p>
+      <div class="fsocial"><a href="#">📸</a><a href="#">💬</a><a href="#">📘</a><a href="#">🎵</a></div>
+    </div>
+    <div class="fcol"><h4>Loja</h4><ul>
+      <li><a href="./produtos.html">Buquês</a></li>
+      <li><a href="./produtos.html">Arranjos</a></li>
+      <li><a href="./produtos.html">Plantas</a></li>
+      <li><a href="./produtos.html">Presentes</a></li>
+    </ul></div>
+    <div class="fcol"><h4>Informações</h4><ul>
+      <li><a href="./sobre.html">Sobre nós</a></li>
+      <li><a href="./servicos.html">Serviços</a></li>
+      <li><a href="#">Política de entrega</a></li>
+      <li><a href="#">Trocas e devoluções</a></li>
+    </ul></div>
+    <div class="fcol"><h4>Contato</h4><ul>
+      <li><a href="./contato.html">Fale conosco</a></li>
+      <li><a href="#">(11) 99999-8888</a></li>
+      <li><a href="#">Rua das Flores, 142</a></li>
+      <li><a href="#">Seg–Sáb 8h–20h</a></li>
+    </ul></div>
+  </div>
+  <div class="fbot">
+    <p>© 2025 Flores & Pétalas. Todos os direitos reservados.</p>
+    <div class="fpay"><span>Pix</span><span>Visa</span><span>Master</span><span>Elo</span></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* CURSOR */
+const cur=document.getElementById("cur"),ring=document.getElementById("curRing");
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener("mousemove",e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+"px";cur.style.top=my+"px"});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+"px";ring.style.top=ry+"px";requestAnimationFrame(loop)})();
+document.querySelectorAll("a,button,.sc,.horario,.dep").forEach(el=>{
+  el.addEventListener("mouseenter",()=>{cur.style.transform="translate(-50%,-50%) scale(2)";ring.style.transform="translate(-50%,-50%) scale(1.5)"});
+  el.addEventListener("mouseleave",()=>{cur.style.transform="translate(-50%,-50%) scale(1)";ring.style.transform="translate(-50%,-50%) scale(1)"});
+});
+
+/* REVEAL */
+const ro=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add("visible"),80*(i%5));ro.unobserve(e.target)}});
+},{threshold:.1});
+document.querySelectorAll(".reveal").forEach(el=>ro.observe(el));
+
+/* CART */
+let cart=[];
+function toggleCart(){document.getElementById("cartPanel").classList.toggle("open");document.getElementById("cartOverlay").classList.toggle("open")}
+function renderCart(){
+  const body=document.getElementById("cartBody"),empty=document.getElementById("cartEmpty"),foot=document.getElementById("cartFoot"),badge=document.getElementById("badge");
+  const qty=cart.reduce((s,i)=>s+i.qty,0);
+  badge.textContent=qty;badge.classList.toggle("show",qty>0);
+  if(!cart.length){empty.style.display="flex";foot.style.display="none";body.innerHTML="";body.appendChild(empty);return}
+  empty.style.display="none";foot.style.display="block";
+  body.innerHTML=cart.map(it=>`<div class="ci"><div class="ci-thumb">${it.emoji}</div><div class="ci-info"><div class="ci-name">${it.name}</div><div class="ci-price">R$ ${it.price.toFixed(2).replace(".",",")}</div><div class="ci-qty"><button class="qbtn" onclick="chQty('${it.name}',-1)">−</button><span class="qnum">${it.qty}</span><button class="qbtn" onclick="chQty('${it.name}',1)">+</button></div></div><button class="ci-rm" onclick="rmItem('${it.name}')">✕</button></div>`).join("");
+  const sub=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  document.getElementById("freteFill").style.width=Math.min(100,(sub/150)*100)+"%";
+  const gratis=sub>=150;
+  document.getElementById("freteHint").innerHTML=gratis?"<b style='color:var(--sage)'>🎉 Frete grátis liberado!</b>":`Falta <b>R$ ${(150-sub).toFixed(2).replace(".",",")}</b> para frete grátis`;
+  document.getElementById("cartSub").textContent="R$ "+sub.toFixed(2).replace(".",",");
+  document.getElementById("cartFrete").innerHTML=gratis?"<span style='color:var(--sage)'>Grátis!</span>":"R$ 15,00";
+  document.getElementById("cartTotal").textContent="R$ "+(sub+(gratis?0:15)).toFixed(2).replace(".",",");
+}
+function chQty(name,d){const it=cart.find(i=>i.name===name);if(!it)return;it.qty+=d;if(it.qty<=0)cart=cart.filter(i=>i.name!==name);renderCart()}
+function rmItem(name){cart=cart.filter(i=>i.name!==name);renderCart()}
+
+/* FORMULÁRIO */
+function updateChar(el){
+  const len=Math.min(el.value.length,500);
+  document.getElementById("charCount").textContent=len+" / 500";
+  if(el.value.length>500)el.value=el.value.substring(0,500);
+}
+
+document.getElementById("fform").addEventListener("submit",function(e){
+  e.preventDefault();
+  const nome=document.getElementById("fnome").value.trim();
+  const email=document.getElementById("femail").value.trim();
+  const msg=document.getElementById("fmsg").value.trim();
+  if(!nome||!email||!msg)return;
+
+  const btn=document.getElementById("submitBtn");
+  const loading=document.getElementById("loadingBox");
+  const success=document.getElementById("successBox");
+
+  btn.style.display="none";
+  loading.style.display="flex";
+
+  setTimeout(()=>{
+    loading.style.display="none";
+    this.style.display="none";
+    success.style.display="block";
+  },2000);
+});
+
+/* HORÁRIOS — destaca o dia atual */
+const hoje=new Date().getDay();
+if(hoje>=1&&hoje<=5)document.getElementById("h1").classList.add("hoje");
+else if(hoje===6)document.getElementById("h2").classList.add("hoje");
+else document.getElementById("h3").classList.add("hoje");
+
+/* TOAST
